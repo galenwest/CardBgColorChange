@@ -76,9 +76,9 @@ public class MainActivity extends Activity {
                         b = getOffsetBlue(color4, color3, positionOffset);
                         break;
                 }
-                // 设置背景渐变色
+                // 设置渐变背景色
 //                createLinearGradientBitmap(Color.rgb(r, g, b));
-                // 设置背景色
+                // 设置纯背景色
                 background.setBackgroundColor(Color.rgb(r, g, b));
                 setStatusBarColor(MainActivity.this, Color.rgb(r, g, b));
                 // 计算灰度后比较
@@ -187,7 +187,6 @@ public class MainActivity extends Activity {
         RectF rectF = new RectF(0, 0, bgBitmap.getWidth(), bgBitmap.getHeight());
         canvas.drawRoundRect(rectF, 20, 20, paint);
         canvas.drawRect(rectF, paint);
-//        background.setImageBitmap(bgBitmap);
         background.setBackground(new BitmapDrawable(bgBitmap));
     }
 
