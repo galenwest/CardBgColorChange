@@ -1,7 +1,15 @@
 package com.lenovo.cardchange;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -19,7 +27,8 @@ public class MainActivity extends Activity {
     // 模拟3个颜色
     private int color1 = Color.rgb(22, 98, 39);
     private int color2 = Color.rgb(222, 188, 132);
-    private int color3 = Color.rgb(79, 28, 66);
+    private int color3 = Color.rgb(187, 235, 78);
+    private int color4 = Color.rgb(79, 28, 66);
 
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -34,6 +43,7 @@ public class MainActivity extends Activity {
         mCardAdapter.addCardItem(new CardItem(R.string.title_1, R.string.text_1));
         mCardAdapter.addCardItem(new CardItem(R.string.title_2, R.string.text_1));
         mCardAdapter.addCardItem(new CardItem(R.string.title_3, R.string.text_1));
+        mCardAdapter.addCardItem(new CardItem(R.string.title_4, R.string.text_1));
         ShadowTransformer mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
         mCardShadowTransformer.enableScaling(true);
 
@@ -56,11 +66,19 @@ public class MainActivity extends Activity {
                         b = getOffsetBlue(color2, color3, positionOffset);
                         break;
                     case 2:
-                        r = getOffsetRed(color3, color2, positionOffset);
-                        g = getOffsetGreen(color3, color2, positionOffset);
-                        b = getOffsetBlue(color3, color2, positionOffset);
+                        r = getOffsetRed(color3, color4, positionOffset);
+                        g = getOffsetGreen(color3, color4, positionOffset);
+                        b = getOffsetBlue(color3, color4, positionOffset);
+                        break;
+                    case 3:
+                        r = getOffsetRed(color4, color3, positionOffset);
+                        g = getOffsetGreen(color4, color3, positionOffset);
+                        b = getOffsetBlue(color4, color3, positionOffset);
                         break;
                 }
+                // 设置背景渐变色
+//                createLinearGradientBitmap(Color.rgb(r, g, b));
+                // 设置背景色
                 background.setBackgroundColor(Color.rgb(r, g, b));
                 setStatusBarColor(MainActivity.this, Color.rgb(r, g, b));
                 // 计算灰度后比较
@@ -149,5 +167,39 @@ public class MainActivity extends Activity {
 
     private int getBlue(int color) {
         return (color & 0x0000ff);
+    }
+
+    //创建线性渐变背景色
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void createLinearGradientBitmap(int color) {
+        int bgColors[] = new int[2];
+        bgColors[0] = color;
+        bgColors[1] = changeColor(color);
+
+        Bitmap bgBitmap = Bitmap.createBitmap(background.getWidth(), background.getHeight(), Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas();
+        Paint paint = new Paint();
+        canvas.setBitmap(bgBitmap);
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        LinearGradient gradient = new LinearGradient(0, 0, 0, bgBitmap.getHeight(), bgColors[0], bgColors[1], Shader.TileMode.CLAMP);
+        paint.setShader(gradient);
+        paint.setAntiAlias(true);
+        RectF rectF = new RectF(0, 0, bgBitmap.getWidth(), bgBitmap.getHeight());
+        canvas.drawRoundRect(rectF, 20, 20, paint);
+        canvas.drawRect(rectF, paint);
+//        background.setImageBitmap(bgBitmap);
+        background.setBackground(new BitmapDrawable(bgBitmap));
+    }
+
+    private int changeColor(int color) {
+        int r = getRed(color);
+        int g = getGreen(color);
+        int b = getBlue(color);
+        // 计算灰度后比较
+        if ((r * 299 + g * 587 + b * 114) > 127500) {
+            return Color.rgb(r / 6 * 5, g / 6 * 5, b / 6 * 5);
+        } else {
+            return Color.rgb(r < 188 ? r / 5 * 6 : r, g < 188 ? g / 5 * 6 : g, b < 188 ? b / 5 * 6 : b);
+        }
     }
 }
