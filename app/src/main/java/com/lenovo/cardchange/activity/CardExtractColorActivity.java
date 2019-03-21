@@ -2,7 +2,13 @@ package com.lenovo.cardchange.activity;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -112,16 +118,20 @@ public class CardExtractColorActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int color;
+                        int color, darkColor;
                         if (palette == null) return;
                         if (palette.getDarkVibrantColor(Color.TRANSPARENT) != Color.TRANSPARENT) {
                             color = palette.getVibrantColor(Color.TRANSPARENT);
+                            darkColor = palette.getDarkVibrantColor(Color.TRANSPARENT);
                         } else if (palette.getDarkMutedColor(Color.TRANSPARENT) != Color.TRANSPARENT) {
                             color = palette.getMutedColor(Color.TRANSPARENT);
+                            darkColor = palette.getDarkMutedColor(Color.TRANSPARENT);
                         } else {
                             color = palette.getLightVibrantColor(Color.TRANSPARENT);
+                            darkColor = palette.getLightMutedColor(Color.TRANSPARENT);
                         }
                         background.setBackgroundColor(color);
+                        createLinearGradientBitmap(color, darkColor);
 //                        int r = getRed(color), g = getGreen(color), b = getBlue(color);
 //                        setStatusBarColor(CardExtractColorActivity.this, Color.rgb(r, g, b));
 //                        // 计算灰度后比较
@@ -171,6 +181,40 @@ public class CardExtractColorActivity extends AppCompatActivity {
 
     private int getBlue(int color) {
         return (color & 0x0000ff);
+    }
+
+
+    //创建线性渐变背景色
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void createLinearGradientBitmap(int color, int darkColor) {
+        int bgColors[] = new int[2];
+        bgColors[0] = color;
+        bgColors[1] = darkColor;
+
+        Bitmap bgBitmap = Bitmap.createBitmap(background.getWidth(), background.getHeight(), Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas();
+        Paint paint = new Paint();
+        canvas.setBitmap(bgBitmap);
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        LinearGradient gradient = new LinearGradient(0, 0, 0, bgBitmap.getHeight(), bgColors[0], bgColors[1], Shader.TileMode.CLAMP);
+        paint.setShader(gradient);
+        paint.setAntiAlias(true);
+        RectF rectF = new RectF(0, 0, bgBitmap.getWidth(), bgBitmap.getHeight());
+        canvas.drawRoundRect(rectF, 20, 20, paint);
+        canvas.drawRect(rectF, paint);
+        background.setBackground(new BitmapDrawable(bgBitmap));
+    }
+
+    private int changeColor(int color) {
+        int r = getRed(color);
+        int g = getGreen(color);
+        int b = getBlue(color);
+        // 计算灰度后比较
+        if ((r * 299 + g * 587 + b * 114) > 127500) {
+            return Color.rgb(r / 6 * 5, g / 6 * 5, b / 6 * 5);
+        } else {
+            return Color.rgb(r < 188 ? r / 5 * 6 : r, g < 188 ? g / 5 * 6 : g, b < 188 ? b / 5 * 6 : b);
+        }
     }
 
 }
