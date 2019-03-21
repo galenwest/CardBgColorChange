@@ -9,10 +9,24 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
+    <activity
+      android:name=".activity.CardExtractColorActivity"
+      android:label="@string/title_activity_card_extract_color"
+      android:theme="@style/AppTheme.NoActionBar"></activity>
+    <activity
+      android:name=".activity.ExtractColorActivity"
+      android:label="@string/title_activity_extract"
+      android:theme="@style/AppTheme.NoActionBar" />
+    <activity
+      android:name=".activity.CardChangeBgColorActivity"
+      android:label="@string/title_activity_card_change_bg_color"
+      android:theme="@style/AppTheme.NoActionBar" />
     <activity android:name=".MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
+
         <category android:name="android.intent.category.LAUNCHER" />
+
         <action android:name="android.intent.action.VIEW" />
       </intent-filter>
     </activity>

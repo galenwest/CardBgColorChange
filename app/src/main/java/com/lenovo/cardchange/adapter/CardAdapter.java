@@ -1,4 +1,4 @@
-package com.lenovo.cardchange;
+package com.lenovo.cardchange.adapter;
 
 
 import android.support.v7.widget.CardView;

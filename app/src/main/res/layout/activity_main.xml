@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:id="@+id/background"
-  tools:context=".MainActivity">
+  android:orientation="vertical">
 
-  <android.support.v4.view.ViewPager
-    android:id="@+id/viewPager"
+  <Button
+    android:id="@+id/bt1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="bottom"
-    android:clipToPadding="false"
-    android:overScrollMode="never"
-    android:paddingStart="30dp"
-    android:paddingLeft="30dp"
-    android:paddingEnd="30dp"
-    android:paddingRight="30dp"
-    android:paddingTop="80dp"
-    android:paddingBottom="80dp" />
+    android:layout_height="wrap_content"
+    android:text="背景渐变切换" />
+
+  <Button
+    android:id="@+id/bt2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="颜色提取" />
+
+  <Button
+    android:id="@+id/bt3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="背景取色切换" />
 
 </LinearLayout>

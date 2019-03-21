@@ -1,4 +1,4 @@
-package com.lenovo.cardchange;
+package com.lenovo.cardchange.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -6,7 +6,11 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.lenovo.cardchange.R;
+import com.lenovo.cardchange.bean.CardItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +21,12 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     private List<CardItem> mData;
     private float mBaseElevation;
 
-    CardPagerAdapter() {
+    public CardPagerAdapter() {
         mData = new ArrayList<>();
         mViews = new ArrayList<>();
     }
 
-    void addCardItem(CardItem item) {
+    public void addCardItem(CardItem item) {
         mViews.add(null);
         mData.add(item);
     }
@@ -50,7 +54,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View view = LayoutInflater.from(container.getContext())
-                .inflate(R.layout.adapter, container, false);
+                .inflate(R.layout.card_adapter, container, false);
         container.addView(view);
         bind(mData.get(position), view);
         CardView cardView = view.findViewById(R.id.cardView);
@@ -73,8 +77,10 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     private void bind(CardItem item, View view) {
         TextView titleTextView = view.findViewById(R.id.titleTextView);
         TextView contentTextView = view.findViewById(R.id.contentTextView);
+        ImageView contentImage = view.findViewById(R.id.change_img);
         titleTextView.setText(item.getTitle());
         contentTextView.setText(item.getText());
+        contentImage.setImageResource(item.getImage());
     }
 
 }

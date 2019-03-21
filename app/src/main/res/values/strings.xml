@@ -6,6 +6,9 @@
   <string name="title_3">Three</string>
   <string name="title_4">Fore</string>
 
-  <string name="text_1">lkajdsflkajdsfkasdfasdfajdsfklajdsflaksjdflkajsdf;lkajsdflkjasdlfjalsdkfjlakdsjflaksdjflakjdsflaksjdf;akjsdfakjsdflkajsdf;kadjsf;alkdjfsshfkshdkja</string>
+  <string name="text_1"></string>
+  <string name="title_activity_card_change_bg_color">CardChangeBgColor</string>
+  <string name="title_activity_extract">ExtractActivity</string>
+  <string name="title_activity_card_extract_color">CardExtractColorActivity</string>
 
 </resources>
