@@ -1,5 +1,6 @@
 package com.lenovo.cardchange.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lenovo.cardchange.R;
+import com.lenovo.cardchange.activity.CardChangeActiity;
 import com.lenovo.cardchange.bean.CardItem;
 
 import java.util.ArrayList;
@@ -20,10 +22,12 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     private List<CardView> mViews;
     private List<CardItem> mData;
     private float mBaseElevation;
+    private Context context;
 
-    public CardPagerAdapter() {
+    public CardPagerAdapter(Context context) {
         mData = new ArrayList<>();
         mViews = new ArrayList<>();
+        this.context = context;
     }
 
     public void addCardItem(CardItem item) {
@@ -58,6 +62,12 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         container.addView(view);
         bind(mData.get(position), view);
         CardView cardView = view.findViewById(R.id.cardView);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CardChangeActiity.actionStart(context);
+            }
+        });
 
         if (mBaseElevation == 0) {
             mBaseElevation = cardView.getCardElevation();

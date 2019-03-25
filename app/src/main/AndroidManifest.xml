@@ -10,9 +10,13 @@
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
     <activity
+      android:name=".activity.CardChangeActiity"
+      android:label="@string/title_activity_card_change_actiity"
+      android:theme="@style/AppTheme.NoActionBar"></activity>
+    <activity
       android:name=".activity.CardExtractColorActivity"
       android:label="@string/title_activity_card_extract_color"
-      android:theme="@style/AppTheme.NoActionBar"></activity>
+      android:theme="@style/AppTheme.NoActionBar" />
     <activity
       android:name=".activity.ExtractColorActivity"
       android:label="@string/title_activity_extract"

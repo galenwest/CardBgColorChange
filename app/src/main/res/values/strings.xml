@@ -10,5 +10,6 @@
   <string name="title_activity_card_change_bg_color">CardChangeBgColor</string>
   <string name="title_activity_extract">ExtractActivity</string>
   <string name="title_activity_card_extract_color">CardExtractColorActivity</string>
+  <string name="title_activity_card_change_actiity">CardChangeActiity</string>
 
 </resources>

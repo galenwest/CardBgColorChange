@@ -37,7 +37,7 @@ public class CardChangeBgColorActivity extends AppCompatActivity {
         background = findViewById(R.id.background);
         ViewPager mViewPager = findViewById(R.id.viewPager);
 
-        CardPagerAdapter mCardAdapter = new CardPagerAdapter();
+        CardPagerAdapter mCardAdapter = new CardPagerAdapter(this);
         mCardAdapter.addCardItem(new CardItem(R.string.title_1, R.string.text_1, R.mipmap.crocus));
         mCardAdapter.addCardItem(new CardItem(R.string.title_2, R.string.text_1, R.mipmap.copenhagen));
         mCardAdapter.addCardItem(new CardItem(R.string.title_3, R.string.text_1, R.mipmap.reaching_spider));
