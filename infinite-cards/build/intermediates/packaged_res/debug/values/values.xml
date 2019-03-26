@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">lib</string>
+    <declare-styleable name="InfiniteCardView">
+        <attr name="animType">
+            <enum name="front" value="0"/>
+            <enum name="switchPosition" value="1"/>
+            <enum name="frontToLast" value="2"/>
+        </attr>
+        <attr format="float" name="cardRatio"/>
+        <attr format="integer" name="animDuration"/>
+        <attr format="integer" name="animAddRemoveDelay"/>
+        <attr format="integer" name="animAddRemoveDuration"/>
+    </declare-styleable>
+</resources>
