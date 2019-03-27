@@ -1,5 +1,6 @@
 package com.bakerj.infinitecards;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
@@ -7,12 +8,17 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.BaseAdapter;
 
 import com.bakerj.infinitecards.lib.R;
+import com.bakerj.infinitecards.transformer.DefaultCommonTransformer;
 
 /**
  * @author BakerJ
@@ -35,6 +41,9 @@ public class InfiniteCardView extends ViewGroup {
     //view adapter
     private BaseAdapter mAdapter;
     private int mCardWidth, mCardHeight;
+
+    //定义手势检测器实例
+    GestureDetector detector;
 
     public InfiniteCardView(@NonNull Context context) {
         this(context, null);
@@ -69,6 +78,155 @@ public class InfiniteCardView extends ViewGroup {
         mAnimationHelper = new CardAnimationHelper(animType, animDuration, this);
         mAnimationHelper.setAnimAddRemoveDuration(animAddRemoveDuration);
         mAnimationHelper.setAnimAddRemoveDelay(animAddRemoveDelay);
+
+        //创建手势检测器
+        detector = new GestureDetector(context, new InfiniteCardView.ScrollTouchLisener());
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //将该Activity上的触碰事件交给GesturDetector处理
+        return detector.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return false;
+    }
+
+    class ScrollTouchLisener implements GestureDetector.OnGestureListener {
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (velocityX > 100) {
+                setStyleRight();
+            } else if (velocityX < -100) {
+                setStyleLeft();
+            }
+            return true;
+        }
+    }
+
+    public void setStyleRight() {
+        this.setClickable(false);
+        this.setAnimType(InfiniteCardView.ANIM_TYPE_FRONT_TO_LAST);
+        this.setAnimInterpolator(new OvershootInterpolator(-8));
+        this.setTransformerToFront(new DefaultCommonTransformer());
+        this.setTransformerToBack(new AnimationTransformer() {
+            @Override
+            public void transformAnimation(View view, float fraction, int cardWidth, int cardHeight, int fromPosition, int toPosition) {
+                int positionCount = fromPosition - toPosition;
+                float scale = (0.8f - 0.1f * fromPosition) + (0.1f * fraction * positionCount);
+                view.setScaleX(scale);
+                view.setScaleY(scale);
+                if (fraction < 0.5) {
+                    view.setTranslationX(cardWidth * fraction * 1.5f);
+                    view.setRotationY(-45 * fraction);
+                } else {
+                    view.setTranslationX(cardWidth * 1.5f * (1f - fraction));
+                    view.setRotationY(-45 * (1 - fraction));
+                }
+            }
+
+            @Override
+            public void transformInterpolatedAnimation(View view, float fraction, int cardWidth, int cardHeight, int fromPosition, int toPosition) {
+                int positionCount = fromPosition - toPosition;
+                float scale = (0.8f - 0.1f * fromPosition) + (0.1f * fraction * positionCount);
+                view.setTranslationY(-cardHeight * (0.8f - scale) * 0.5f - cardWidth * (0.02f *
+                        fromPosition - 0.02f * fraction * positionCount));
+            }
+        });
+        this.setZIndexTransformerToBack(new ZIndexTransformer() {
+            @Override
+            public void transformAnimation(CardItem card, float fraction, int cardWidth, int cardHeight, int fromPosition, int toPosition) {
+                if (fraction < 0.5f) {
+                    card.zIndex = 1f + 0.01f * fromPosition;
+                } else {
+                    card.zIndex = 1f + 0.01f * toPosition;
+                }
+            }
+
+            @Override
+            public void transformInterpolatedAnimation(CardItem card, float fraction, int cardWidth, int cardHeight, int fromPosition, int toPosition) {
+
+            }
+        });
+
+        this.bringCardToFront(1);
+    }
+
+    public void setStyleLeft() {
+        this.setClickable(false);
+        this.setAnimType(InfiniteCardView.ANIM_TYPE_FRONT_TO_LAST);
+        this.setAnimInterpolator(new OvershootInterpolator(-8));
+        this.setTransformerToFront(new DefaultCommonTransformer());
+        this.setTransformerToBack(new AnimationTransformer() {
+            @Override
+            public void transformAnimation(View view, float fraction, int cardWidth, int cardHeight, int fromPosition, int toPosition) {
+                int positionCount = fromPosition - toPosition;
+                float scale = (0.8f - 0.1f * fromPosition) + (0.1f * fraction * positionCount);
+                view.setScaleX(scale);
+                view.setScaleY(scale);
+                if (fraction < 0.5) {
+                    view.setTranslationX(-cardWidth * fraction * 1.5f);
+                    view.setRotationY(45 * fraction);
+                } else {
+                    view.setTranslationX(-cardWidth * 1.5f * (1f - fraction));
+                    view.setRotationY(45 * (1 - fraction));
+                }
+            }
+
+            @Override
+            public void transformInterpolatedAnimation(View view, float fraction, int cardWidth, int cardHeight, int fromPosition, int toPosition) {
+                int positionCount = fromPosition - toPosition;
+                float scale = (0.8f - 0.1f * fromPosition) + (0.1f * fraction * positionCount);
+                view.setTranslationY(-cardHeight * (0.8f - scale) * 0.5f - cardWidth * (0.02f *
+                        fromPosition - 0.02f * fraction * positionCount));
+            }
+        });
+        this.setZIndexTransformerToBack(new ZIndexTransformer() {
+            @Override
+            public void transformAnimation(CardItem card, float fraction, int cardWidth, int cardHeight, int fromPosition, int toPosition) {
+                if (fraction < 0.5f) {
+                    card.zIndex = 1f + 0.01f * fromPosition;
+                } else {
+                    card.zIndex = 1f + 0.01f * toPosition;
+                }
+            }
+
+            @Override
+            public void transformInterpolatedAnimation(CardItem card, float fraction, int cardWidth, int cardHeight, int fromPosition, int toPosition) {
+
+            }
+        });
+
+        this.bringCardToFront(1);
     }
 
     @Override

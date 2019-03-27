@@ -1,5 +1,6 @@
 package com.lenovo.cardchange.adapter;
 
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public class ImageAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout
                     .img_adapter, parent, false);
         }
+        CardView cardView = convertView.findViewById(R.id.cardView);
         ImageView imageView = convertView.findViewById(R.id.card_image);
         imageView.setImageResource(resIds[position]);
         return convertView;
